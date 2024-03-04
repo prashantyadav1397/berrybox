@@ -3,7 +3,7 @@
 React-based web app that helps users keep track of day-to-day tasks effectively and efficiently.
 
 ### What can a user do with this?
-Todo - Remember everything, maintains a local copy of the tasks added by the user on their local machine. A user can do things like: -
+Todo - Remember everything. A user can do things like: -
 <ul>
     <li>Add a new todo</li>
     <li>Update or edit an existing todo</li>
@@ -11,9 +11,7 @@ Todo - Remember everything, maintains a local copy of the tasks added by the use
     <li>Sort todos based on their ids</li>
 </ul>
 
-The App is device responsive and can be used independently on different kinds of devices.
-
-[ Note: - As the todos list is not synced, the data availablity is scoped to a given device. ]
+The App is device-responsive
 
 ### Core concepts used
 <ul>
@@ -25,18 +23,13 @@ The App is device responsive and can be used independently on different kinds of
             <li>useContext() hook</li>
         </ul>
     </li>
-    <li>Browser local storage access for data saving</li>
+    <li>Connecting to Rest API</li>
     <li>Material UI - Theme and Components</li>
-    <li>GitHub pages based hosting</li>
 </ul>
 
 ### Resources
 
 Learn more about React: - https://react.dev/ </br>
 Learn more about Material UI: - https://mui.com/ </br>
-Learn more about GitHub pages: - https://docs.github.com/en/pages </br>
 React Icons: - https://react-icons.github.io/react-icons </br>
 Free icons resources (Please provide due credit to the resource owner or the source): - https://www.flaticon.com/
-
-### Future Scope
-Probably, the data availabilty across platforms and sync. Stay tuned for more. Cheers!!
