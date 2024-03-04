@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('main');
 
+  app.enableCors({ origin: '*' });
   app.useGlobalPipes(new ValidationPipe());
   logger.debug('Localhost is online at 3000');
 
