@@ -8,9 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class TodosService {
   private readonly logger = new Logger(TodosService.name);
-  private data = JSON.parse(
-    fs.readFileSync(`${process.cwd()}/src/database/db.json`, 'utf-8'),
-  );
+
+  private readDataFromDbJson(): string {
+    return fs.readFileSync(`${process.cwd()}/src/database/db.json`, 'utf-8');
+  }
+
+  private writeDataToDbJson(data: string) {
+    fs.writeFileSync(`${process.cwd()}/src/database/db.json`, data);
+  }
 
   /**
    * Creates a new todo item
@@ -19,6 +24,7 @@ export class TodosService {
    * @returns {ListTodo} - return created todoitem
    */
   public createTodo(body: CreateOrUpdateTodo): ListTodo {
+    const data = JSON.parse(this.readDataFromDbJson());
     const { todoItem } = body;
     const id = uuidv4();
     const newTodoItem = {
@@ -26,11 +32,8 @@ export class TodosService {
       todoItem,
     };
 
-    this.data.todos.push(newTodoItem);
-    fs.writeFileSync(
-      `${process.cwd()}/src/database/db.json`,
-      JSON.stringify(this.data),
-    );
+    data.todos.push(newTodoItem);
+    this.writeDataToDbJson(JSON.stringify(data));
     this.logger.verbose(
       `New todo added successfully ${JSON.stringify(newTodoItem)}`,
     );
@@ -42,7 +45,9 @@ export class TodosService {
    * @returns {ListTodo[]} - returns a list of todos
    */
   public listTodos(): ListTodo[] {
-    return this.data.todos;
+    const data = JSON.parse(this.readDataFromDbJson());
+
+    return data.todos;
   }
 
   /**
@@ -53,23 +58,20 @@ export class TodosService {
    * @returns {ListTodo} - updated todo item
    */
   public updateTodo(todoItemId: UUID, body: CreateOrUpdateTodo): ListTodo {
-    const itemIndex = this.data.todos.findIndex(
-      (todo) => todo.id === todoItemId,
-    );
+    const data = JSON.parse(this.readDataFromDbJson());
+    const itemIndex = data.todos.findIndex((todo) => todo.id === todoItemId);
+
     if (itemIndex === -1) {
       this.logger.error(`Todo Item not found with id ${todoItemId}`);
       throw new NotFoundException(`Todo Item not found with id ${todoItemId}`);
     }
+
     const { todoItem } = body;
-    this.data.todos[itemIndex] = {
+    data.todos[itemIndex] = {
       id: todoItemId,
       todoItem,
     };
-    fs.writeFileSync(
-      `${process.cwd()}/src/database/db.json`,
-      JSON.stringify(this.data),
-    );
-
+    this.writeDataToDbJson(JSON.stringify(data));
     this.logger.verbose(`Todo Item ${todoItemId} updated successfully`);
 
     return this.getTodoItem(todoItemId);
@@ -80,21 +82,16 @@ export class TodosService {
    * @param todoItemId
    */
   public deleteTodo(todoItemId: UUID) {
-    const itemIndex = this.data.todos.findIndex(
-      (todo) => todo.id === todoItemId,
-    );
+    const data = JSON.parse(this.readDataFromDbJson());
+    const itemIndex = data.todos.findIndex((todo) => todo.id === todoItemId);
 
     if (itemIndex === -1) {
       this.logger.error(`Todo Item not found with id ${todoItemId}`);
       throw new NotFoundException(`Todo Item not found with id ${todoItemId}`);
     }
 
-    this.data.todos.splice(itemIndex, 1);
-
-    fs.writeFileSync(
-      `${process.cwd()}/src/database/db.json`,
-      JSON.stringify(this.data),
-    );
+    data.todos.splice(itemIndex, 1);
+    this.writeDataToDbJson(JSON.stringify(data));
 
     this.logger.verbose(`Todo Item ${todoItemId} deleted successfully`);
   }
@@ -105,6 +102,8 @@ export class TodosService {
    * @returns {ListTodo} - todo item
    */
   private getTodoItem(todoItemId: uuidv4): ListTodo {
-    return this.data.todos.find((todo) => todo.id === todoItemId);
+    const data = JSON.parse(this.readDataFromDbJson());
+
+    return data.todos.find((todo) => todo.id === todoItemId);
   }
 }
