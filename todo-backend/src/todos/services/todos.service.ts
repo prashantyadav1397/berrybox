@@ -12,6 +12,12 @@ export class TodosService {
     fs.readFileSync(`${process.cwd()}/src/database/db.json`, 'utf-8'),
   );
 
+  /**
+   * Creates a new todo item
+   *
+   * @param body CreateOrUpdateTodo
+   * @returns {ListTodo} - return created todoitem
+   */
   public createTodo(body: CreateOrUpdateTodo): ListTodo {
     const { todoItem } = body;
     const id = uuidv4();
@@ -32,10 +38,20 @@ export class TodosService {
     return this.getTodoItem(id);
   }
 
+  /**
+   * @returns {ListTodo[]} - returns a list of todos
+   */
   public listTodos(): ListTodo[] {
     return this.data.todos;
   }
 
+  /**
+   * Updates an existing todoItem by it's item id
+   *
+   * @param todoItemId
+   * @param body
+   * @returns {ListTodo} - updated todo item
+   */
   public updateTodo(todoItemId: UUID, body: CreateOrUpdateTodo): ListTodo {
     const itemIndex = this.data.todos.findIndex(
       (todo) => todo.id === todoItemId,
@@ -59,6 +75,10 @@ export class TodosService {
     return this.getTodoItem(todoItemId);
   }
 
+  /**
+   * Deletes a todoItem based on the item id
+   * @param todoItemId
+   */
   public deleteTodo(todoItemId: UUID) {
     const itemIndex = this.data.todos.findIndex(
       (todo) => todo.id === todoItemId,
@@ -79,6 +99,11 @@ export class TodosService {
     this.logger.verbose(`Todo Item ${todoItemId} deleted successfully`);
   }
 
+  /**
+   * return a todo item based on item id
+   * @param todoItemId
+   * @returns {ListTodo} - todo item
+   */
   private getTodoItem(todoItemId: uuidv4): ListTodo {
     return this.data.todos.find((todo) => todo.id === todoItemId);
   }
